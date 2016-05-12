@@ -1,14 +1,14 @@
-var gulp          = require('gulp');
-var notify        = require('gulp-notify');
-var source        = require('vinyl-source-stream');
-var browserify    = require('browserify');
-var babelify      = require('babelify');
-var ngAnnotate    = require('browserify-ngannotate');
-var browserSync   = require('browser-sync').create();
-var rename        = require('gulp-rename');
-var templateCache = require('gulp-angular-templatecache');
-var uglify        = require('gulp-uglify');
-var merge         = require('merge-stream');
+var gulp          = require('gulp'); //https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md
+var notify        = require('gulp-notify'); // to send messages to Windows using the node-notifier module. https://github.com/mikaelbr/gulp-notify
+var source        = require('vinyl-source-stream'); //Use conventional text streams at the start of your gulp or vinyl pipelines https://github.com/hughsk/vinyl-source-stream
+var browserify    = require('browserify'); //http://browserify.org/ (bundling up all of your dependencies)
+var babelify      = require('babelify'); //Browserify transform for Babel(https://babeljs.io/) (url: https://github.com/babel/babelify)
+var ngAnnotate    = require('browserify-ngannotate'); //uses ng-annotate to add dependency injection annotations to your AngularJS source code https://github.com/omsmith/browserify-ngannotate
+var browserSync   = require('browser-sync').create(); //https://www.browsersync.io/ synchornised browser testing
+var rename        = require('gulp-rename'); //gulp-rename is a gulp plugin to rename files easily. https://www.npmjs.com/package/gulp-rename
+var templateCache = require('gulp-angular-templatecache');  //https://www.npmjs.com/package/gulp-angular-templatecache Concatenates and registers AngularJS templates in the $templateCache.    
+var uglify        = require('gulp-uglify'); //Minify files with UglifyJS. https://www.npmjs.com/package/gulp-uglify
+var merge         = require('merge-stream'); //Create a stream that emits events from multiple other streams https://www.npmjs.com/package/merge-stream
 
 // Where our files are located
 var jsFiles   = "src/js/**/*.js";
@@ -28,16 +28,16 @@ var interceptErrors = function(error) {
 };
 
 
-gulp.task('browserify', ['views'], function() {
+gulp.task('browserify', ['views'], function() { // bundle all dependencies of app.js
   return browserify('./src/js/app.js')
       .transform(babelify, {presets: ["es2015"]})
-      .transform(ngAnnotate)
+      .transform(ngAnnotate)  // put annotation for each file
       .bundle()
       .on('error', interceptErrors)
       //Pass desired output filename to vinyl-source-stream
-      .pipe(source('main.js'))
+      .pipe(source('main.js'))  // save dependencies in main.js
       // Start piping stream to tasks!
-      .pipe(gulp.dest('./build/'));
+      .pipe(gulp.dest('./build/')); // copy to build folder
 });
 
 gulp.task('html', function() {
@@ -46,14 +46,14 @@ gulp.task('html', function() {
       .pipe(gulp.dest('./build/'));
 });
 
-gulp.task('views', function() {
+gulp.task('views', function() {   // concatenate angularjs templates in one file
   return gulp.src(viewFiles)
       .pipe(templateCache({
         standalone: true
       }))
       .on('error', interceptErrors)
       .pipe(rename("app.templates.js"))
-      .pipe(gulp.dest('./src/js/config/'));
+      .pipe(gulp.dest('./src/js/config/')); // copy to config folder
 });
 
 // This task is used for building production ready
