@@ -16,6 +16,7 @@ class AuthCtrl {
 			(res) => {
 				this.isSubmitting = false;
 				console.log(res);
+				this._$state.go('app.home');
 			},
 			(err) => {
 				this.isSubmitting = false;

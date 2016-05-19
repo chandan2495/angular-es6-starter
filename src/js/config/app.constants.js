@@ -1,7 +1,7 @@
 const AppConstants = {
   api: 'https://conduit.productionready.io/api',
   jwtKey: 'jwtToken',
-  appName: 'Conduit',
+  appName: 'Conduit'
 };
 
 export default AppConstants;

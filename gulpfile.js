@@ -9,6 +9,8 @@ var rename        = require('gulp-rename'); //gulp-rename is a gulp plugin to re
 var templateCache = require('gulp-angular-templatecache');  //https://www.npmjs.com/package/gulp-angular-templatecache Concatenates and registers AngularJS templates in the $templateCache.    
 var uglify        = require('gulp-uglify'); //Minify files with UglifyJS. https://www.npmjs.com/package/gulp-uglify
 var merge         = require('merge-stream'); //Create a stream that emits events from multiple other streams https://www.npmjs.com/package/merge-stream
+var jshint        = require('gulp-jshint');
+var stylish       = require('jshint-stylish');
 
 // Where our files are located
 var jsFiles   = "src/js/**/*.js";
@@ -27,6 +29,12 @@ var interceptErrors = function(error) {
   this.emit('end');
 };
 
+
+gulp.task('jshint', function() {
+  return gulp.src(jsFiles)
+        .pipe(jshint())
+        .pipe(jshint.reporter(stylish));
+});
 
 gulp.task('browserify', ['views'], function() { // bundle all dependencies of app.js
   return browserify('./src/js/app.js')
